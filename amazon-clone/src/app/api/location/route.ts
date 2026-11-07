@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ipAddress } from "@vercel/functions";
 
 export const config = {
   runtime: "edge",
@@ -15,14 +14,25 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Missing coordinates" }, { status: 400 });
   }
 
+  // The delivery location is optional. Without a key, skip the lookup
+  // instead of failing every page load.
+  const apiKey = process.env.GEOAPIFY_APIKEY;
+  if (!apiKey) {
+    return NextResponse.json({ data: null });
+  }
+
   try {
-    const apiKey = process.env.GEOAPIFY_APIKEY;
     const res = await fetch(
-      `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&apiKey=${apiKey}`
+      `https://api.geoapify.com/v1/geocode/reverse?lat=${encodeURIComponent(
+        lat
+      )}&lon=${encodeURIComponent(lon)}&apiKey=${apiKey}`
     );
+    if (!res.ok) {
+      return NextResponse.json({ data: null }, { status: 502 });
+    }
     const result = await res.json();
-    return NextResponse.json({ data: result?.features[0]?.properties });
-  } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json({ data: result?.features?.[0]?.properties ?? null });
+  } catch {
+    return NextResponse.json({ data: null }, { status: 502 });
   }
 }
