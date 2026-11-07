@@ -4,7 +4,7 @@ import HelperFunctions from "@/app/services/Helpers";
 import { StoreService } from "@/app/services/StoreService";
 import { Department, Product } from "@/app/types";
 import { debounce } from "lodash";
-import { Search, X } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -200,9 +200,10 @@ export default function SearchBar() {
           id="search"
           className="w-[100%] h-[100%] flex justify-center items-center"
         >
+          <div className="relative h-[100%] shrink-0">
           <select
             id="searchDropdown"
-            className={`amazon-focus cursor-pointer focus:z-10 relative ${isSearching ? "z-50" : ""} bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900 px-1 md:px-2 max-w-[84px] md:max-w-[160px] rounded-l-lg h-[100%] text-[12px] [&>option]:bg-white [&>option]:text-gray-900`}
+            className={`amazon-focus cursor-pointer focus:z-10 relative ${isSearching ? "z-50" : ""} bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900 appearance-none pl-2 md:pl-3 pr-6 md:pr-8 max-w-[84px] md:max-w-[170px] truncate rounded-l-lg h-[100%] text-[12px] [&>option]:bg-white [&>option]:text-gray-900`}
             value={selectedDepartment}
             onChange={(e) => setSelectedDepartment(Number(e.target.value))}
           >
@@ -218,6 +219,13 @@ export default function SearchBar() {
               );
             })}
           </select>
+          <ChevronDown
+            size={16}
+            className={`absolute right-2 md:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-600 ${
+              isSearching ? "z-50" : ""
+            }`}
+          />
+          </div>
           <div className="relative flex-1 h-full">
             <input
               ref={inputRef}
