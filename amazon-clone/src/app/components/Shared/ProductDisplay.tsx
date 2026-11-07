@@ -61,7 +61,7 @@ export default function ProductDisplay(props: ProductDisplayProps) {
   //#endregion
 
   return (
-    <div className="relative md:-mt-[200px] lg:-mt-[350px]">
+    <div className="relative -mt-[70px] sm:-mt-[100px] md:-mt-[120px] lg:-mt-[350px]">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
         {departmentData?.map((department) => (
           <div

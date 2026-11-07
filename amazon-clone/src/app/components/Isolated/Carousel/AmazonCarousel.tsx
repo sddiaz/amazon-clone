@@ -36,7 +36,7 @@ const AmazonCarousel = () => {
   }, []);
 
   return (
-    <div className="relative w-full h-[240px] sm:h-[400px] md:h-[600px] overflow-hidden">
+    <div className="relative w-full h-[240px] sm:h-[340px] md:h-[420px] lg:h-[600px] overflow-hidden">
       {images.map((image, index) => (
         <div
           key={image.src}
