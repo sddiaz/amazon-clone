@@ -309,11 +309,12 @@ export default class FirebaseService {
         const userData = userDoc.data();
         const wishlist = userData.wishlist;
 
-        const existingItemIndex = wishlist?.findIndex(
-          (item) => item === productId
+        // Ids are stored as strings from product pages and numbers elsewhere.
+        const isAlreadySaved = wishlist?.some(
+          (item) => String(item) === String(productId)
         );
 
-        if (existingItemIndex !== -1) {
+        if (isAlreadySaved) {
           // Item exists - Continue
           return false;
         } else {
@@ -326,6 +327,23 @@ export default class FirebaseService {
       } else {
         throw new Error("User Not Found.");
       }
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  static async removeItemFromWishlist(userId, productId) {
+    try {
+      const userRef = firestoreDb.collection("users").doc(userId);
+      const userDoc = await userRef.get();
+      if (!userDoc.exists) {
+        throw new Error("User Not Found.");
+      }
+      const wishlist = userDoc.data().wishlist ?? [];
+      await userRef.update({
+        wishlist: wishlist.filter((item) => String(item) !== String(productId)),
+      });
+      return true;
     } catch (error) {
       throw this.handleError(error);
     }

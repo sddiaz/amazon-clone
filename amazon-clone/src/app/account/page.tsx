@@ -70,6 +70,9 @@ export default function Account() {
         <Link href="/orders">
           <AmazonButton type="outlined" text="Your Orders" full onClick={() => {}} />
         </Link>
+        <Link href="/wishlist">
+          <AmazonButton type="outlined" text="Your Wish List" full onClick={() => {}} />
+        </Link>
         <AmazonButton type="outlined" text="Sign out" full onClick={signOut} />
         {error && <div className="text-xs text-red-600">{error}</div>}
         {isConfirmingDelete ? (

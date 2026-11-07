@@ -4,6 +4,7 @@ import {
   Car,
   Cpu,
   Gamepad2,
+  Heart,
   Gem,
   Gift,
   Menu,
@@ -24,6 +25,10 @@ const BottomBar = () => {
       <NavButton link="/orders">
         <ShoppingBag />
         Orders
+      </NavButton>
+      <NavButton link="/wishlist">
+        <Heart />
+        Wish List
       </NavButton>
       <NavButton link="https://www.linkedin.com/in/santiagoddiaz/">
         <Video />

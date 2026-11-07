@@ -74,9 +74,8 @@ export default function Popover(props: {
                     </li>{" "}
                     <li>
                       <AmazonLink
-                        disabled
-                        href=""
-                        text="Watchlist"
+                        href="/wishlist"
+                        text="Wish List"
                         defaultColor
                       />
                     </li>{" "}
