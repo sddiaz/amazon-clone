@@ -126,7 +126,7 @@ export default function ProductDisplay(props: ProductDisplayProps) {
           </div>
         ))}
         {(departmentData?.length as number) > 0 && (
-          <div className="flex flex-col select-none w-[25%]">
+          <div className="flex flex-col select-none w-full sm:w-[25%]">
             <AmazonButton
               type="standard"
               onClick={() => fetchProducts()}

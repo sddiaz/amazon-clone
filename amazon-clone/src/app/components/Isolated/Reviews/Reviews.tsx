@@ -102,7 +102,7 @@ export default function Reviews(props: ReviewProps) {
           />
         </div>
         {/* Reviews List */}
-        <div className="px-20 w-full">
+        <div className="px-4 md:px-20 w-full">
           <div className="font-sans font-semibold text-xl">
             Top reviews from other buyers
           </div>

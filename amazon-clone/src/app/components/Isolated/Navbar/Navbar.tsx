@@ -52,17 +52,25 @@ const Navbar = () => {
     shouldShowNavbar && (
       <>
         {/* Top Section */}
-        <div className="p-[1px_8px_0px_6px] top-0 w-full h-[60px] bg-[var(--darkBlue)] flex items-center font-ember text-white ">
+        <div className="p-[1px_8px_0px_6px] top-0 w-full md:h-[60px] bg-[var(--darkBlue)] flex flex-wrap md:flex-nowrap items-center font-ember text-white">
           {/* Amazon Logo */}
           <Logo />
           {/* Location */}
-          <Location />
+          <div className="hidden md:block h-full">
+            <Location />
+          </div>
           {/* Search Bar */}
-          <SearchBar />
+          <div className="order-last md:order-none w-full md:w-auto md:flex-1 md:min-w-0 h-[50px] md:h-full">
+            <SearchBar />
+          </div>
           {/* Greeting */}
-          <Greeting />
+          <div className="ml-auto md:ml-0">
+            <Greeting />
+          </div>
           {/* Returns and Orders */}
-          <Orders />
+          <div className="hidden md:block">
+            <Orders />
+          </div>
           {/* Cart */}
           <Cart
             size={

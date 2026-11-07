@@ -128,18 +128,23 @@ export default function Page() {
     const fetchProductById = async () => {
       try {
         const productInfo = await StoreService.getProductById(params.id);
-        const orderInfo = await FirebaseService.getProductOrderInfo(params.id);
-
         if (productInfo) {
           setProductInfo(productInfo);
           setMainImage(productInfo?.images[0]);
         }
+      } catch (error) {
+        console.error("Error fetching product #" + params.id + ": ", error);
+        return;
+      }
+
+      // Order stats are optional; the page should still render without them.
+      try {
+        const orderInfo = await FirebaseService.getProductOrderInfo(params.id);
         if (orderInfo) {
           setOrderInfo(orderInfo as ExtraOrderInfo);
         }
       } catch (error) {
-        console.error("Error fetching product #" + params.id + ": ", error);
-        throw error;
+        console.warn("Order info unavailable for product #" + params.id, error);
       }
     };
 
@@ -156,15 +161,15 @@ export default function Page() {
       {!productInfo ? (
         ""
       ) : (
-        <div className="flex flex-col items-center max-w-[1500px] mx-auto relative h-[200vh]">
+        <div className="flex flex-col items-center max-w-[1500px] mx-auto relative min-h-screen w-full">
           {/* Product Section Container */}
-          <div>
+          <div className="w-full">
             {productInfo && mainImage && (
-              <div className="p-10 h-full flex flex-col md:flex-row">
+              <div className="p-4 md:p-10 h-full flex flex-col md:flex-row">
                 {/* Images */}
-                <div className="drop-shadow-md  max-w-[1000px] md:w-1/2 flex items-center justify-center h-full gap-4">
+                <div className="drop-shadow-md  max-w-[1000px] w-full md:w-1/2 flex flex-col-reverse md:flex-row items-center justify-center h-full gap-4">
                   {/* Thumbnails Row */}
-                  <div className="flex flex-col gap-2 justify-center">
+                  <div className="flex flex-row md:flex-col flex-wrap gap-2 justify-center">
                     {productInfo?.images?.map((image, index) => (
                       <div
                         key={index}
@@ -182,7 +187,7 @@ export default function Page() {
                     ))}
                   </div>
                   {/* Main Image */}
-                  <div className="aspect-square relative w-3/4">
+                  <div className="aspect-square relative w-full md:w-3/4">
                     <Image
                       loading="lazy"
                       alt={productInfo?.title}

@@ -16,7 +16,7 @@ import NavButton from "../../Shared/NavButton";
 
 const BottomBar = () => {
   return (
-    <div className="bg-[var(--amazonBlue)] text-white flex items-center font-emberThin overflow-hidden py-1 justify-between">
+    <div className="bg-[var(--amazonBlue)] text-white flex items-center font-emberThin overflow-x-auto [scrollbar-width:none] py-1 md:justify-between">
       <NavButton>
         <Menu />
         All

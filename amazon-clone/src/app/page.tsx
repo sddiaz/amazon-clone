@@ -20,7 +20,7 @@ export default function Home() {
   //#region Component
 
   return (
-    <div className="w-full bg-[var(--amazonGrey)] overflow-hidden h-[100vh]">
+    <div className="w-full bg-[var(--amazonGrey)] overflow-hidden min-h-screen">
       <div className="max-w-[1500px] mx-auto relative">
         {/* Carousel */}
         <AmazonCarousel />

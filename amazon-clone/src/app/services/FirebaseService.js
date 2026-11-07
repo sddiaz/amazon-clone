@@ -179,7 +179,7 @@ export default class FirebaseService {
       // Handle index building error gracefully
       if (error.message.includes("requires an index")) {
         console.error("Firestore index is being built. Please wait...");
-        return { totalOrders: 0, lastMonthOrders: 0 };
+        return { totalOrders: 0, recentOrders: 0 };
       }
       throw error;
     }

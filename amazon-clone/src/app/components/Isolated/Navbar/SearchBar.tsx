@@ -159,7 +159,7 @@ export default function SearchBar() {
       <div
         ref={containerRef}
         id="searchFill"
-        className="w-[100%] h-[100%] flex p-[10px] text-white items-center justify-between"
+        className="w-[100%] h-[100%] flex p-[6px] md:p-[10px] text-white items-center justify-between"
       >
         <div
           id="search"
@@ -167,7 +167,7 @@ export default function SearchBar() {
         >
           <select
             id="searchDropdown"
-            className="amazon-focus cursor-pointer focus:z-10 relative bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900 px-2 rounded-l-lg h-[100%] text-[12px] [&>option]:bg-white [&>option]:text-gray-900"
+            className="amazon-focus cursor-pointer focus:z-10 relative bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900 px-1 md:px-2 max-w-[84px] md:max-w-none rounded-l-lg h-[100%] text-[12px] [&>option]:bg-white [&>option]:text-gray-900"
             value={selectedDepartment}
             onChange={(e) => setSelectedDepartment(Number(e.target.value))}
           >
@@ -196,7 +196,7 @@ export default function SearchBar() {
               placeholder="Search Amazon-Clone"
               className={`${
                 isSearching ? "relative z-50" : ""
-              } amazon-focus focus:z-90 relative w-full min-w-[500px] h-full placeholder-gray-500 text-black text-sm pl-2 font-normal`}
+              } amazon-focus focus:z-90 relative w-full min-w-0 md:min-w-[500px] h-full placeholder-gray-500 text-black text-sm pl-2 font-normal`}
             />
 
             {/* Suggestions Panel */}
@@ -255,7 +255,7 @@ export default function SearchBar() {
           </div>
           <button
             id="searchButton"
-            className="amazon-focus rounded-r-lg focus:z-10 relative bg-orange-300 hover:bg-orange-400 h-[100%] w-[80px] flex justify-center items-center"
+            className="amazon-focus rounded-r-lg focus:z-10 relative bg-orange-300 hover:bg-orange-400 h-[100%] w-[48px] md:w-[80px] shrink-0 flex justify-center items-center"
             onClick={() => {}}
           >
             <div className="text-gray-600">
