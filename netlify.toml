@@ -2,6 +2,9 @@
 [build]
   base = "amazon-clone"
   command = "npm run build"
+  # Relative to base. Without this Netlify publishes the source folder itself
+  # and every URL is a 404.
+  publish = ".next"
 
 [build.environment]
   # Matches CI. Netlify's default is newer.
