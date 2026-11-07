@@ -6,7 +6,7 @@ This project is a full-stack Amazon clone built using modern web technologies. I
 
 ## Demo & Design
 
-*   Here is the [**Live Demo**](https://amazon-clone-lake-pi.vercel.app/)
+*   Here is the [**Live Demo**](https://delightful-valkyrie-3c863b.netlify.app/)
 *   .. And the [**System Design**](https://github.com/user-attachments/assets/55694ab4-1d8f-4674-b6a3-12901a25f222)
 
 *   <img width="1194" height="744" alt="image" src="https://github.com/user-attachments/assets/5736d62e-74a4-4b69-8e7b-aff18ca11e08" />
@@ -19,6 +19,7 @@ This project is a full-stack Amazon clone built using modern web technologies. I
 *   **Backend:** [Firebase](https://firebase.google.com/) Authentication (email/password and Google) and Firestore. Firestore security rules live in `amazon-clone/firestore.rules`.
 *   **Product data:** the public [DummyJSON](https://dummyjson.com/) API (read-only).
 *   **Optional:** [Geoapify](https://www.geoapify.com/) reverse geocoding for the delivery location in the navbar.
+*   **Hosting:** [Netlify](https://www.netlify.com/), configured by `netlify.toml` (base `amazon-clone`, publish `.next`, Node 22). Pushes to `main` deploy automatically.
 *   **CI:** GitHub Actions builds, lints and type-checks every push and PR.
 
 ## Features
@@ -53,6 +54,10 @@ No environment variables are required. The Firebase web config is in `src/lib/fi
 1.  Create a Firebase project and enable Email/Password and Google sign-in, plus Firestore.
 2.  Replace the config in `src/lib/firebase/config.js` and the project id in `amazon-clone/.firebaserc`.
 3.  Deploy the security rules: `npx firebase login`, then `npx firebase deploy --only firestore:rules`.
+
+### Deploying
+
+Connect the repo to Netlify. `netlify.toml` already sets the base directory, build command and publish directory, and Netlify detects Next.js on its own. After the first deploy, add the site's domain in Firebase Console → Authentication → Settings → Authorized domains, or Google sign-in and password-reset links will fail. Optionally set `GEOAPIFY_APIKEY` in the site's environment variables.
 
 ### Scripts
 
