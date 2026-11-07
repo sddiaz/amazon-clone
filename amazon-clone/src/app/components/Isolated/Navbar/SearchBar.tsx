@@ -116,6 +116,9 @@ export default function SearchBar() {
   const runSearch = () => {
     const query = searchInput.trim();
     if (!query) return;
+    // Typed searches are remembered with a "q:" id; product suggestions use
+    // the product id.
+    handleRecentSearch({ id: `q:${query.toLowerCase()}`, title: query });
     setIsSearching(false);
     inputRef.current?.blur();
     router.push(`/search?q=${encodeURIComponent(query)}`);
@@ -235,7 +238,11 @@ export default function SearchBar() {
                         >
                           <div className="flex items-center justify-between text-[#000] text-[14px]">
                             <Link
-                              href={`/product/${suggestion.id}`}
+                              href={
+                                String(suggestion.id).startsWith("q:")
+                                  ? `/search?q=${encodeURIComponent(suggestion.title)}`
+                                  : `/product/${suggestion.id}`
+                              }
                               className="block w-full h-full relative"
                               onClick={() => {
                                 handleRecentSearch(suggestion);
