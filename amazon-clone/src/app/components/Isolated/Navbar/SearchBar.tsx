@@ -19,7 +19,11 @@ type Suggestion = {
 export default function SearchBar() {
   //#region Variables
 
-  const [selectedDepartment, setSelectedDepartment] = useState(0);
+  // -1 means "All Departments"
+  const [selectedDepartment, setSelectedDepartment] = useState(-1);
+  const selectedCategory = (DepartmentData as Department[]).find(
+    (dept) => dept.id === selectedDepartment
+  )?.name;
   const [isSearching, setIsSearching] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -53,7 +57,12 @@ export default function SearchBar() {
     setLoading(true);
     try {
       const result = await StoreService.searchProducts(query);
-      const newSuggestions = result?.products?.map((item: Product) => ({
+      const newSuggestions = result?.products
+        ?.filter(
+          (item: Product) =>
+            !selectedCategory || item.category === selectedCategory
+        )
+        .map((item: Product) => ({
         id: item.id,
         title: item.title,
       }));
@@ -115,13 +124,24 @@ export default function SearchBar() {
 
   const runSearch = () => {
     const query = searchInput.trim();
+    // Department picked but nothing typed: browse that department.
+    if (!query && selectedCategory) {
+      setIsSearching(false);
+      inputRef.current?.blur();
+      router.push(`/category/${selectedCategory}`);
+      return;
+    }
     if (!query) return;
     // Typed searches are remembered with a "q:" id; product suggestions use
     // the product id.
     handleRecentSearch({ id: `q:${query.toLowerCase()}`, title: query });
     setIsSearching(false);
     inputRef.current?.blur();
-    router.push(`/search?q=${encodeURIComponent(query)}`);
+    router.push(
+      `/search?q=${encodeURIComponent(query)}${
+        selectedCategory ? `&category=${selectedCategory}` : ""
+      }`
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -182,10 +202,11 @@ export default function SearchBar() {
         >
           <select
             id="searchDropdown"
-            className={`amazon-focus cursor-pointer focus:z-10 relative ${isSearching ? "z-50" : ""} bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900 px-1 md:px-2 max-w-[84px] md:max-w-none rounded-l-lg h-[100%] text-[12px] [&>option]:bg-white [&>option]:text-gray-900`}
+            className={`amazon-focus cursor-pointer focus:z-10 relative ${isSearching ? "z-50" : ""} bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900 px-1 md:px-2 max-w-[84px] md:max-w-[160px] rounded-l-lg h-[100%] text-[12px] [&>option]:bg-white [&>option]:text-gray-900`}
             value={selectedDepartment}
             onChange={(e) => setSelectedDepartment(Number(e.target.value))}
           >
+            <option value={-1}>All Departments</option>
             {(DepartmentData as Department[])?.map((dept) => {
               const formattedName = HelperFunctions.formatDepartmentName(
                 dept.name
@@ -211,7 +232,7 @@ export default function SearchBar() {
               placeholder="Search Amazon-Clone"
               className={`${
                 isSearching ? "relative z-50" : ""
-              } amazon-focus focus:z-90 relative w-full min-w-0 h-full placeholder-gray-500 text-black text-sm pl-2 font-normal`}
+              } amazon-focus focus:z-90 relative w-full min-w-0 h-full placeholder-gray-500 text-black text-sm pl-3 pr-4 font-normal`}
             />
 
             {/* Suggestions Panel */}
@@ -274,7 +295,7 @@ export default function SearchBar() {
           </div>
           <button
             id="searchButton"
-            className={`amazon-focus rounded-r-lg focus:z-10 relative ${isSearching ? "z-50" : ""} bg-orange-300 hover:bg-orange-400 h-[100%] w-[48px] md:w-[80px] shrink-0 flex justify-center items-center`}
+            className={`amazon-focus rounded-r-lg focus:z-10 relative ${isSearching ? "z-50" : ""} bg-orange-300 hover:bg-orange-400 h-[100%] w-[52px] md:w-[90px] shrink-0 flex justify-center items-center`}
             onClick={runSearch}
           >
             <div className="text-gray-600">
