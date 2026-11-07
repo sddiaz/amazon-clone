@@ -1,4 +1,4 @@
-import { ExtraOrderInfo, Product } from "@/app/types";
+import { Product } from "@/app/types";
 import React, { useEffect, useState } from "react";
 import AmazonRating from "../../Shared/AmazonRating";
 import StarStack from "../StarStack/StarStack";
@@ -8,7 +8,6 @@ import Link from "next/link";
 import FirebaseService from "@/app/services/FirebaseService";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/types";
-import { useParams } from "next/navigation";
 import { User } from "lucide-react";
 
 interface ReviewProps {
@@ -20,10 +19,6 @@ export default function Reviews(props: ReviewProps) {
 
   const [searchType, setSearchType] = useState<string>("Highest Rating");
   const [sortedReviews, setSortedReviews] = useState<Product["reviews"]>([]);
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
-  const firebaseUserData = useSelector((state: RootState) => state.user);
-  const [productInfo, setProductInfo] = useState<Product | null>(null);
-  const [orderInfo, setOrderInfo] = useState<ExtraOrderInfo | null>(null);
   const authInfo = useSelector((state: RootState) => state.auth)?.authInfo;
   const [userReviews, setUserReviews] = useState<Product["reviews"]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -32,9 +27,6 @@ export default function Reviews(props: ReviewProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
   const isSignedIn = Boolean(authInfo?.uid);
-  const params = useParams();
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
 
   //#endregion
 
@@ -56,17 +48,6 @@ export default function Reviews(props: ReviewProps) {
           return 0;
       }
     });
-  };
-
-  const getAvailabilityColor = (availability: string) => {
-    switch (availability) {
-      case "In Stock":
-        return "green";
-      case "Low Stock":
-        return "var(--amazonOrange)";
-      case "Out of Stock":
-        return "red";
-    }
   };
 
   const submitReview = async () => {

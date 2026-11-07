@@ -1,5 +1,4 @@
 "use client";
-import { authInfoSelector } from "@/app/state/slices/auth-slice";
 import { RootState } from "@/app/types";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,8 +11,6 @@ import Logo from "./Logo";
 import Orders from "./Orders";
 import SearchBar from "./SearchBar";
 import BottomBar from "./BottomBar";
-import { doc, onSnapshot } from "firebase/firestore";
-import { firestoreDb } from "@/lib/firebase/config";
 
 const Navbar = () => {
 
@@ -23,7 +20,6 @@ const Navbar = () => {
   const [shouldShowNavbar, setShouldShowNavbar] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const nonNavPaths = ["/sign-in", "/sign-up"];
-  const userInfo = useSelector(authInfoSelector);
   const firebaseUserData = useSelector((state: RootState) => state.user);
 
   //#endregion

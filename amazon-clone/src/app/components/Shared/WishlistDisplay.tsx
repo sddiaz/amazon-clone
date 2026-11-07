@@ -1,15 +1,11 @@
 import { Product, RootState } from "@/app/types";
-import { Card } from "@mui/material";
-import { Heart, Star } from "lucide-react";
 import Image from "next/image";
-import AmazonRating from "./AmazonRating";
 import Prime from "../../../../public/prime-logo.png";
 import AmazonLink from "./AmazonLink";
 import AmazonButton from "./AmazonButton";
 import FirebaseService from "@/app/services/FirebaseService";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 
 interface WishlistDisplayProps {
@@ -22,7 +18,6 @@ export default function WishlistDisplay(props: WishlistDisplayProps) {
   const [alert, setAlert] = useState<string[]>([]);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const firebaseUserData = useSelector((state: RootState) => state.user);
-  const params = useParams();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -69,9 +64,6 @@ export default function WishlistDisplay(props: WishlistDisplayProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {props?.wishlistData.map((product, index) => {
         if (!product) return null;
-
-        const discountedPrice =
-          product.price * (1 - product.discountPercentage / 100);
 
         return (
           <div

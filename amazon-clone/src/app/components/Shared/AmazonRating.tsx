@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { Star } from "lucide-react";
-import AmazonLink from "./AmazonLink";
 
 interface RatingProps {
   rating: number;

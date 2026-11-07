@@ -1,4 +1,4 @@
-import { UserData, UserState } from "@/app/types";
+import { UserData } from "@/app/types";
 import React, { useEffect, useState } from "react";
 import AmazonLink from "./AmazonLink";
 

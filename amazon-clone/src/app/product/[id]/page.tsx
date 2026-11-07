@@ -91,24 +91,6 @@ export default function Page() {
     }
   };
 
-  const sortReviews = (
-    reviews: Product["reviews"] | undefined,
-    type: string
-  ) => {
-    if (!reviews) return [];
-
-    return [...reviews].sort((a, b) => {
-      switch (type) {
-        case "Lowest Rating":
-          return a.rating - b.rating;
-        case "Highest Rating":
-          return b.rating - a.rating;
-        default:
-          return 0;
-      }
-    });
-  };
-
   const getAvailabilityColor = (availability: string) => {
     switch (availability) {
       case "In Stock":

@@ -14,97 +14,50 @@ This project is a full-stack Amazon clone built using modern web technologies. I
 
 ## Tech Stack
 
-This project leverages the following technologies:
-
-*   **Frontend:**
-    *   [Next.js](https://nextjs.org/): React framework for server-side rendering and improved performance.
-    *   [Tailwind CSS](https://tailwindcss.com/): Utility-first CSS framework for rapid UI development.
-    *   [React Icons](https://react-icons.github.io/react-icons/): Easily add icons to your React projects.
-*   **Backend & Database:**
-    *   [Firebase](https://firebase.google.com/): Backend-as-a-service providing authentication, database (Firestore), and storage.
-    *   [Next.js](https://nextjs.org/): Next has Serverless Functions+ an API Routes feature for a solid back-end. 
-*   **Payment Processing:**
-    *   [Stripe](https://stripe.com/): Secure and reliable payment gateway integration.
-*   **Deployment:**
-    *   [Vercel](https://vercel.com/): Platform for easy deployment of Next.js applications.
-*   **State Management:**
-    *   [RTK Query](https://redux-toolkit.js.org/rtk-query/overview/): For managing application state.
+*   **Frontend:** [Next.js](https://nextjs.org/) (App Router), [Tailwind CSS](https://tailwindcss.com/), [MUI](https://mui.com/) (rating and select), [Lucide](https://lucide.dev/) icons.
+*   **State:** [Redux Toolkit](https://redux-toolkit.js.org/) for auth, user and location state.
+*   **Backend:** [Firebase](https://firebase.google.com/) Authentication (email/password and Google) and Firestore. Firestore security rules live in `amazon-clone/firestore.rules`.
+*   **Product data:** the public [DummyJSON](https://dummyjson.com/) API (read-only).
+*   **Optional:** [Geoapify](https://www.geoapify.com/) reverse geocoding for the delivery location in the navbar.
+*   **CI:** GitHub Actions builds, lints and type-checks every push and PR.
 
 ## Features
 
-*   Product browsing with categories and search functionality.
-*   Detailed product pages with images, descriptions, and reviews (if implemented).
-*   Add to cart and shopping cart management.
-*   Secure checkout process with Stripe integration.
-*   User authentication (sign-up/sign-in).
-*   Order history and management.
-*   Responsive design for various screen sizes.
-*   Server-Side Rendering (SSR) for improved SEO and performance (thanks to Next.js).
+*   Product browsing by category, with search suggestions and recent searches (local storage).
+*   Product pages with images, details and reviews. Signed-in users can write reviews.
+*   Cart and wishlist management.
+*   Demo checkout: places an order and empties the cart. **No payment is taken.**
+*   Order history, and an account page with sign out and delete account.
+*   Sign up, sign in (email/password or Google) and password reset.
+*   Responsive layout from phone to desktop.
 
-User Stories: 
-Users can... 
-- Create an account
-- Login
-- Delete their account
-- View Order History
-- View Delivery Location (Nearest Zipcode)
-- View 10 most recent searches (local storage)
-- Get, Add, Remove, or Update number of products in their cart.
-- Favorite products, view Favorites.
-- View Product Details. 
+Not built yet: category pages (the "See more" links) and a search results page.
 
 ## Getting Started
 
-1.  **Clone the repository:**
+The app lives in the `amazon-clone/` folder.
 
-    ```bash
-    git clone [invalid URL removed]
-    ```
+```bash
+git clone https://github.com/sddiaz/amazon-clone
+cd amazon-clone/amazon-clone
+npm install
+npm run dev
+```
 
-2.  **Navigate to the project directory:**
+Open [http://localhost:3000](http://localhost:3000).
 
-    ```bash
-    cd amazon-clone
-    ```
+No environment variables are required. The Firebase web config is in `src/lib/firebase/config.js` (web API keys are not secrets). Optionally set `GEOAPIFY_APIKEY` in `.env.local` (or in your hosting provider's settings) to show the delivery location.
 
-3.  **Install dependencies:**
+### Firebase setup (only if you use your own project)
 
-    ```bash
-    npm install  # or yarn install or pnpm install
-    ```
+1.  Create a Firebase project and enable Email/Password and Google sign-in, plus Firestore.
+2.  Replace the config in `src/lib/firebase/config.js` and the project id in `amazon-clone/.firebaserc`.
+3.  Deploy the security rules: `npx firebase login`, then `npx firebase deploy --only firestore:rules`.
 
-4.  **Set up Firebase:**
+### Scripts
 
-    *   Create a Firebase project in the Firebase console ([https://console.firebase.google.com/](https://console.firebase.google.com/)).
-    *   Enable Authentication (Email/Password), Firestore, and Storage (if needed).
-    *   Obtain your Firebase configuration (web config) and add it to a `.env.local` file in the root of your project:
-
-    ```
-    NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
-    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-    ```
-
-5.  **Set up Stripe:**
-
-    *   Create a Stripe account ([https://dashboard.stripe.com/register](https://dashboard.stripe.com/register)).
-    *   Obtain your Stripe publishable key and secret key. Add the publishable key to your `.env.local` file:
-
-    ```
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-    STRIPE_SECRET_KEY=your_stripe_secret_key # Keep this secure!
-    ```
-
-6.  **Run the development server:**
-
-    ```bash
-    npm run dev # or yarn dev or pnpm dev
-    ```
-
-7.  Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+*   `npm run dev`: start the dev server. Do not run `npm run build` while it is running, since both write to `.next`.
+*   `npm run build`: production build (includes lint and type checks).
 
 ## Further Improvements (Things to impress potential employers)
 

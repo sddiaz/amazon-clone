@@ -34,7 +34,7 @@ export default function Cart() {
 
   const handleAddToCart = async (id: number) => {
     try {
-      const result = await FirebaseService.addItemToCart(
+      await FirebaseService.addItemToCart(
         firebaseUserData?.userData?.uid,
         id,
         1
@@ -47,7 +47,7 @@ export default function Cart() {
 
   const handleRemoveItemFromCart = async (id: number) => {
     try {
-      const result = await FirebaseService.removeItemFromCart(
+      await FirebaseService.removeItemFromCart(
         firebaseUserData?.userData?.uid,
         id
       );
@@ -75,7 +75,6 @@ export default function Cart() {
         firebaseUserData?.userData?.wishlist
       );
       if (result) {
-        console.log(result);
         setWishlistData(result);
       }
     } catch (error) {

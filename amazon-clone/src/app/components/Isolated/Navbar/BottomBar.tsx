@@ -17,13 +17,13 @@ import NavButton from "../../Shared/NavButton";
 const BottomBar = () => {
   return (
     <div className="bg-[var(--amazonBlue)] text-white flex items-center font-emberThin overflow-x-auto [scrollbar-width:none] py-1 md:justify-between">
-      <NavButton>
+      <NavButton disabled>
         <Menu />
         All
       </NavButton>
       <NavButton link="/orders">
         <ShoppingBag />
-        Buy Again
+        Orders
       </NavButton>
       <NavButton link="https://www.linkedin.com/in/santiagoddiaz/">
         <Video />

@@ -20,10 +20,6 @@ export default function Popover(props: {
 
   //#region Methods
 
-  const handleMouseOver = () => {
-    setIsOpen(false);
-  };
-
   //#endregion
 
   //#region Hooks

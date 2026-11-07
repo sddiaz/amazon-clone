@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useState } from "react";
 import Alert from "../components/Shared/Alert";
 import AmazonButton from "../components/Shared/AmazonButton";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import GoogleButton from "../components/Isolated/GoogleSignInButton/GoogleButton";
 import AmazonLink from "../components/Shared/AmazonLink";
@@ -18,10 +17,9 @@ export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [password, setPassword] = useState("");
   const [passwordFlow, setPasswordFlow] = useState(false);
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
 
   //#endregion
 
@@ -66,6 +64,23 @@ export default function SignIn() {
     }
   };
 
+  const handleForgotPassword = async () => {
+    setNotice("");
+    if (email === "") {
+      setError("Enter your email first");
+      return;
+    }
+    try {
+      await FirebaseService.resetPassword(email);
+      setError("");
+      setNotice(
+        "If an account exists for this email, a password reset link is on its way."
+      );
+    } catch {
+      setError("Could not send a reset email. Please try again.");
+    }
+  };
+
   const handleSignIn = async () => {
     try {
       setError("");
@@ -93,6 +108,7 @@ export default function SignIn() {
       <div className="">
         <div className="border rounded-md mt-4 p-10 w-[350px]">
           <h1 className="font-emberThin text-[28px]">Sign in</h1>
+          {notice && <div className="text-green-700 my-2">{notice}</div>}
           {!passwordFlow && (
             <>
               <div className="font-emberThin">Email or mobile phone number</div>
@@ -130,6 +146,7 @@ export default function SignIn() {
                 style="flex justify-center"
                 href=""
                 text="Forgot your Password?"
+                onClick={handleForgotPassword}
               />
             </>
           )}
@@ -149,6 +166,7 @@ export default function SignIn() {
                   style="flex justify-center"
                   href=""
                   text="Forgot your Password?"
+                  onClick={handleForgotPassword}
                 />
               </div>
               <input

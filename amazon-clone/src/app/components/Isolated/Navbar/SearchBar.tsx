@@ -6,6 +6,7 @@ import { Department, Product } from "@/app/types";
 import { debounce } from "lodash";
 import { Search, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import DepartmentData from "../../../../../public/data/departments.json";
 import Overlay from "../../Shared/Overlay";
@@ -24,6 +25,7 @@ export default function SearchBar() {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -111,6 +113,14 @@ export default function SearchBar() {
   };
   
 
+  const runSearch = () => {
+    const query = searchInput.trim();
+    if (!query) return;
+    setIsSearching(false);
+    inputRef.current?.blur();
+    router.push(`/search?q=${encodeURIComponent(query)}`);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isSearching) return;
 
@@ -131,6 +141,8 @@ export default function SearchBar() {
           setSearchInput(
             typeof selected === "string" ? selected : selected.title
           );
+        } else {
+          runSearch();
         }
         break;
       case "Escape":
@@ -167,7 +179,7 @@ export default function SearchBar() {
         >
           <select
             id="searchDropdown"
-            className="amazon-focus cursor-pointer focus:z-10 relative bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900 px-1 md:px-2 max-w-[84px] md:max-w-none rounded-l-lg h-[100%] text-[12px] [&>option]:bg-white [&>option]:text-gray-900"
+            className={`amazon-focus cursor-pointer focus:z-10 relative ${isSearching ? "z-50" : ""} bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-900 px-1 md:px-2 max-w-[84px] md:max-w-none rounded-l-lg h-[100%] text-[12px] [&>option]:bg-white [&>option]:text-gray-900`}
             value={selectedDepartment}
             onChange={(e) => setSelectedDepartment(Number(e.target.value))}
           >
@@ -255,8 +267,8 @@ export default function SearchBar() {
           </div>
           <button
             id="searchButton"
-            className="amazon-focus rounded-r-lg focus:z-10 relative bg-orange-300 hover:bg-orange-400 h-[100%] w-[48px] md:w-[80px] shrink-0 flex justify-center items-center"
-            onClick={() => {}}
+            className={`amazon-focus rounded-r-lg focus:z-10 relative ${isSearching ? "z-50" : ""} bg-orange-300 hover:bg-orange-400 h-[100%] w-[48px] md:w-[80px] shrink-0 flex justify-center items-center`}
+            onClick={runSearch}
           >
             <div className="text-gray-600">
               <Search size={23} />

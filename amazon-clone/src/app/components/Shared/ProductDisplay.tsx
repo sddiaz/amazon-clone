@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StoreService } from "../../services/StoreService";
 import DepartmentData from "../../../../public/data/departments.json";
 import HelperFunctions from "../../services/Helpers";
-import { Department, ProductResponse } from "@/app/types";
+import { ProductResponse } from "@/app/types";
 import Link from "next/link";
 import Image from "next/image";
 import AmazonButton from "./AmazonButton";
@@ -15,8 +15,6 @@ export default function ProductDisplay(props: ProductDisplayProps) {
 
   //#region Variables
 
-  const [products, setProducts] = useState([]);
-  const [departments, setDepartments] = useState<Department[]>();
   const [departmentData, setDepartmentData] = useState<ProductResponse[]>();
 
   //#endregion
@@ -35,7 +33,6 @@ export default function ProductDisplay(props: ProductDisplayProps) {
       const selectedDepartments = DepartmentData.filter((value, index) =>
         randomIndices.includes(index)
       );
-      setDepartments(selectedDepartments as Department[]);
       const selectedDepartmentData = await Promise.all(
         selectedDepartments.map((dept) =>
           StoreService.getProductsByCategory(dept.name, 4)
@@ -103,9 +100,9 @@ export default function ProductDisplay(props: ProductDisplayProps) {
 
             {/* Footer */}
             <div className="p-4 bg-gray-50">
-              <button
+              <Link
+                href={`/category/${department.products[0]?.category}`}
                 className="w-full text-sm text-blue-600 hover:text-blue-800 hover:underline font-emberBold flex items-center justify-center gap-2"
-                onClick={() => console.log(department.products[0]?.category)}
               >
                 See more
                 <svg
@@ -121,7 +118,7 @@ export default function ProductDisplay(props: ProductDisplayProps) {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-              </button>
+              </Link>
             </div>
           </div>
         ))}

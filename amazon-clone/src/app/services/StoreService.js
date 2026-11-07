@@ -79,7 +79,7 @@ export const StoreService = {
 
   searchProducts: async (query) => {
     try {
-      const response = await fetch(`${BASE_URL}/products/search?q=${query}`);
+      const response = await fetch(`${BASE_URL}/products/search?q=${encodeURIComponent(query)}`);
       const data = await response.json();
       return data;
     } catch (error) {

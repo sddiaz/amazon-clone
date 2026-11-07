@@ -4,7 +4,6 @@ import Image from "next/image";
 
 const AmazonCarousel = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   
   const images = [
     {
@@ -23,12 +22,10 @@ const AmazonCarousel = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setIsTransitioning(true);
       setTimeout(() => {
         setCurrentImageIndex((prevIndex) => 
           prevIndex === images.length - 1 ? 0 : prevIndex + 1
         );
-        setIsTransitioning(false);
       }, 500); // Half of our transition duration
     }, 5000);
 

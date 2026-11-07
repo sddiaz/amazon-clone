@@ -7,6 +7,7 @@ interface AmazonLinkProps {
   style?: string;
   defaultColor?: boolean;
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 export default function AmazonLink(props: AmazonLinkProps) {
@@ -25,7 +26,15 @@ export default function AmazonLink(props: AmazonLinkProps) {
     <>
       {props?.word && " "}
       <a
-        href={props?.href}
+        href={props?.onClick ? "#" : props?.href}
+        onClick={
+          props?.onClick
+            ? (event) => {
+                event.preventDefault();
+                props.onClick?.();
+              }
+            : undefined
+        }
         className={`${props?.style} ${
           props?.defaultColor ? "text-black" : ""
         } text-center text-[var(--amazonLink)] hover:text-[var(--amazonOrange)] hover:underline cursor-pointer inline`}
