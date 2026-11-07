@@ -53,7 +53,7 @@ export type Product = {
     comment: string;
     date: string; // ISO date string
     reviewerName: string;
-    reviewerEmail: string;
+    reviewerEmail?: string;
   }[];
   returnPolicy: string;
   minimumOrderQuantity: number;

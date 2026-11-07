@@ -56,7 +56,7 @@ const Navbar = () => {
           {/* Amazon Logo */}
           <Logo />
           {/* Location */}
-          <div className="hidden md:block h-full">
+          <div className="hidden lg:block h-full">
             <Location />
           </div>
           {/* Search Bar */}
@@ -68,7 +68,7 @@ const Navbar = () => {
             <Greeting />
           </div>
           {/* Returns and Orders */}
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <Orders />
           </div>
           {/* Cart */}

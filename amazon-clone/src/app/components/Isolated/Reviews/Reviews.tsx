@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import AmazonRating from "../../Shared/AmazonRating";
 import StarStack from "../StarStack/StarStack";
 import AmazonButton from "../../Shared/AmazonButton";
-import { MenuItem, Select } from "@mui/material";
+import { MenuItem, Rating, Select } from "@mui/material";
+import Link from "next/link";
+import FirebaseService from "@/app/services/FirebaseService";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/types";
 import { useParams } from "next/navigation";
@@ -22,6 +24,14 @@ export default function Reviews(props: ReviewProps) {
   const firebaseUserData = useSelector((state: RootState) => state.user);
   const [productInfo, setProductInfo] = useState<Product | null>(null);
   const [orderInfo, setOrderInfo] = useState<ExtraOrderInfo | null>(null);
+  const authInfo = useSelector((state: RootState) => state.auth)?.authInfo;
+  const [userReviews, setUserReviews] = useState<Product["reviews"]>([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [newRating, setNewRating] = useState<number | null>(null);
+  const [newComment, setNewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
+  const isSignedIn = Boolean(authInfo?.uid);
   const params = useParams();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -59,28 +69,74 @@ export default function Reviews(props: ReviewProps) {
     }
   };
 
+  const submitReview = async () => {
+    if (!newRating) {
+      setFormError("Please select a star rating.");
+      return;
+    }
+    if (!newComment.trim()) {
+      setFormError("Please write a few words about the product.");
+      return;
+    }
+    setIsSubmitting(true);
+    setFormError("");
+    try {
+      const saved = await FirebaseService.addReview({
+        productId: props.productInfo.id,
+        uid: authInfo?.uid,
+        reviewerName:
+          authInfo?.displayName || authInfo?.email?.split("@")[0] || "Customer",
+        rating: newRating,
+        comment: newComment.trim(),
+      });
+      setUserReviews((prev) => [saved as Product["reviews"][number], ...prev]);
+      setNewRating(null);
+      setNewComment("");
+      setIsFormOpen(false);
+    } catch (error) {
+      console.error("Error saving review:", error);
+      setFormError("Could not save your review. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   //#endregion
 
   //#region Hooks
 
   useEffect(() => {
+    if (!props.productInfo?.id) return;
+    FirebaseService.getReviews(props.productInfo.id)
+      .then((reviews: Product["reviews"]) => setUserReviews(reviews))
+      .catch((error: unknown) =>
+        console.warn("Customer reviews unavailable", error)
+      );
+  }, [props.productInfo?.id]);
+
+  useEffect(() => {
     if (props.productInfo?.reviews) {
-      setSortedReviews(sortReviews(props.productInfo.reviews, searchType));
+      setSortedReviews(
+        sortReviews(
+          [...userReviews, ...props.productInfo.reviews],
+          searchType
+        )
+      );
     }
-  }, [searchType, props.productInfo]);
+  }, [searchType, props.productInfo, userReviews]);
 
   //#endregion
 
   return (
-    <div className="w-full font-ember p-10">
+    <div className="w-full font-ember p-4 md:p-10">
       {/* Reviews Container */}
-      <div className="pt-4 flex">
+      <div className="pt-4 flex flex-col md:flex-row gap-6">
         {/* Summary */}
-        <div className="w-[20%]">
+        <div className="w-full md:w-[20%]">
           <div className="text-2xl font-ember">Customer Reviews</div>
           <AmazonRating rating={props?.productInfo?.rating} size="large" />
           <div className="text-[grey] font-ember">
-            {`${props?.productInfo?.reviews?.length} reviews`}
+            {`${sortedReviews.length} reviews`}
           </div>
           <StarStack
             rating={props?.productInfo?.rating}
@@ -93,16 +149,52 @@ export default function Reviews(props: ReviewProps) {
           <div className="text-xs font-ember my-2">
             Share your thoughts with other customers
           </div>
-          <AmazonButton
-            type="outlined"
-            onClick={() => {}}
-            disabled
-            text="Write a customer review"
-            full
-          />
+          {isSignedIn ? (
+            <AmazonButton
+              type="outlined"
+              onClick={() => setIsFormOpen((open) => !open)}
+              text={isFormOpen ? "Cancel" : "Write a customer review"}
+              full
+            />
+          ) : (
+            <Link href="/sign-in">
+              <AmazonButton
+                type="outlined"
+                onClick={() => {}}
+                text="Sign in to write a review"
+                full
+              />
+            </Link>
+          )}
+          {isFormOpen && (
+            <div className="mt-4 flex flex-col gap-2">
+              <Rating
+                value={newRating}
+                onChange={(_, value) => setNewRating(value)}
+              />
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                maxLength={1000}
+                rows={4}
+                placeholder="What did you like or dislike?"
+                className="w-full border border-gray-400 rounded p-2 text-sm"
+              />
+              {formError && (
+                <div className="text-xs text-red-600">{formError}</div>
+              )}
+              <AmazonButton
+                type="standard"
+                onClick={submitReview}
+                disabled={isSubmitting}
+                text={isSubmitting ? "Submitting..." : "Submit"}
+                full
+              />
+            </div>
+          )}
         </div>
         {/* Reviews List */}
-        <div className="px-4 md:px-20 w-full">
+        <div className="md:px-10 lg:px-20 w-full">
           <div className="font-sans font-semibold text-xl">
             Top reviews from other buyers
           </div>

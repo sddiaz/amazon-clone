@@ -7,6 +7,7 @@ import { setAuthInfo, clearAuthInfo } from "@/app/state/slices/auth-slice";
 import { UserInfo } from "firebase/auth";
 import { Address, UserData } from "@/app/types";
 import { setUserData } from "@/app/state/slices/user-slice";
+import FirebaseService from "@/app/services/FirebaseService";
 
 export default function FirebaseInitializer() {
   const auth = getAuth(app);
@@ -29,6 +30,10 @@ export default function FirebaseInitializer() {
 
         const userRef = firestoreDb.collection("users").doc(userInfo.uid);
         const userDoc = await userRef.get();
+        FirebaseService.indexEmail(
+          user.email,
+          user.providerData[0]?.providerId
+        ).catch((error) => console.warn("Email index not updated", error));
 
         if (!userDoc.exists) {
           const userData: UserData = {

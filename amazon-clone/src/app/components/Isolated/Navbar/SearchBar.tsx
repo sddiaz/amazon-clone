@@ -196,7 +196,7 @@ export default function SearchBar() {
               placeholder="Search Amazon-Clone"
               className={`${
                 isSearching ? "relative z-50" : ""
-              } amazon-focus focus:z-90 relative w-full min-w-0 md:min-w-[500px] h-full placeholder-gray-500 text-black text-sm pl-2 font-normal`}
+              } amazon-focus focus:z-90 relative w-full min-w-0 h-full placeholder-gray-500 text-black text-sm pl-2 font-normal`}
             />
 
             {/* Suggestions Panel */}

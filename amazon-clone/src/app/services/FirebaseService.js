@@ -62,23 +62,55 @@ export default class FirebaseService {
   }
 
   static async findUserByEmail(email) {
-    const userCollection = firestoreDb.collection("users");
-    const usersByEmail = await userCollection.where("email", "==", email).get();
-    // If no documents match, querySnapshot.empty will be true
-    if (usersByEmail.empty) {
+    // Looked up before sign-in, so it reads a minimal public index
+    // (email -> auth provider) instead of the private users collection.
+    const indexDoc = await firestoreDb
+      .collection("emailIndex")
+      .doc(String(email).trim().toLowerCase())
+      .get();
+    if (!indexDoc.exists) {
       return {
         doesEmailExist: false,
         emailType: null,
       };
     }
-    // Get the first matching document
-    const userDoc = usersByEmail.docs[0];
-    const userData = userDoc.data();
-
     return {
       doesEmailExist: true,
-      emailType: userData.authProvider,
+      emailType: indexDoc.data().authProvider,
     };
+  }
+
+  static async indexEmail(email, authProvider) {
+    if (!email) return;
+    await firestoreDb
+      .collection("emailIndex")
+      .doc(String(email).trim().toLowerCase())
+      .set({ authProvider });
+  }
+
+  /* Review Methods */
+
+  /** @returns {Promise<Array<{id: string, rating: number, comment: string, date: string, reviewerName: string}>>} */
+  static async getReviews(productId) {
+    const snapshot = await firestoreDb
+      .collection("reviews")
+      .where("productId", "==", String(productId))
+      .get();
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  }
+
+  /** @returns {Promise<{id: string, rating: number, comment: string, date: string, reviewerName: string}>} */
+  static async addReview({ productId, uid, reviewerName, rating, comment }) {
+    const review = {
+      productId: String(productId),
+      uid,
+      reviewerName,
+      rating,
+      comment,
+      date: new Date().toISOString(),
+    };
+    const ref = await firestoreDb.collection("reviews").add(review);
+    return { id: ref.id, ...review };
   }
 
   /* User Profile Methods */
