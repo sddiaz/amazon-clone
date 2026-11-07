@@ -1,5 +1,4 @@
 "use client";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 import { Product } from "@/app/types";
 
