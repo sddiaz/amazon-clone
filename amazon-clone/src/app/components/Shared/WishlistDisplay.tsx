@@ -35,7 +35,7 @@ export default function WishlistDisplay(props: WishlistDisplayProps) {
     }, 3000);
   };
 
-  const handleAddToCart = async (id: string) => {
+  const handleAddToCart = async (id: number) => {
     try {
       const result = await FirebaseService.addItemToCart(
         firebaseUserData?.userData?.uid,
