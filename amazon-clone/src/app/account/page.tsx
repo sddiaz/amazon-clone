@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import AddressEditor from "../components/Shared/AddressEditor";
 import AmazonButton from "../components/Shared/AmazonButton";
 import SignInPrompt from "../components/Shared/SignInPrompt";
 import { PageSpinner } from "../components/Shared/Spinner";
@@ -68,6 +69,7 @@ export default function Account() {
           <div className="text-gray-500 text-xs">Sign-in method</div>
           <div>{signInMethod}</div>
         </div>
+        <AddressEditor uid={authInfo.uid} address={userData?.defaultAddress} />
         <Link href="/orders">
           <AmazonButton type="outlined" text="Your Orders" full onClick={() => {}} />
         </Link>

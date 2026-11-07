@@ -349,6 +349,18 @@ export default class FirebaseService {
     }
   }
 
+  static async updateDefaultAddress(userId, address) {
+    try {
+      await firestoreDb
+        .collection("users")
+        .doc(userId)
+        .update({ defaultAddress: address });
+      return true;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   /* Order Methods */
 
   /**

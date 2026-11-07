@@ -1,48 +1,25 @@
 import { UserData } from "@/app/types";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import AmazonLink from "./AmazonLink";
 
 interface AddressDisplayProps {
-    userData: UserData; 
+  userData: UserData | null;
 }
 
 const AddressDisplay = (props: AddressDisplayProps) => {
-
-    //#region Variables
-
-    const [address, setAddress] = useState(""); 
-
-    //#endregion
-
-  useEffect(() => {
-    if (props?.userData) {
-        const getDisplayAddress = () => {
-            // Check for default address
-            if (props?.userData?.defaultAddress) {
-              const addr = props?.userData.defaultAddress;
-              setAddress(`${addr.street}, ${addr.city}, ${addr.state} ${addr.zip}`);
-            }
-            // Check for first address in addressBook
-            else if (props?.userData?.addressBook?.length > 0) {
-              const addr = props?.userData.addressBook[0];
-              setAddress(`${addr.street}, ${addr.city}, ${addr.state} ${addr.zip}`);
-            }
-        };
-
-        if (address == "") {
-            getDisplayAddress(); 
-        }
-    }
-  }, [props?.userData]);
+  const addr = props?.userData?.defaultAddress;
+  // New accounts start with an empty address object, so check real fields.
+  const hasAddress = Boolean(addr?.street && addr?.city);
 
   return (
     <span>
-      {address == "" ? (
-        <AmazonLink href="/profile" text="No Address Found, Please Add One" />
-      ) : (
+      {hasAddress ? (
         <span>
-          Delivering to {address}
+          Delivering to {addr?.street}, {addr?.city}, {addr?.state} {addr?.zip}{" "}
+          <AmazonLink href="/account#address" text="Change" />
         </span>
+      ) : (
+        <AmazonLink href="/account#address" text="Add a delivery address" />
       )}
     </span>
   );

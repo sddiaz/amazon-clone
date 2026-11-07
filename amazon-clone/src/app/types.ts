@@ -18,7 +18,7 @@ export type Address = {
   city: string;
   state: string;
   street: string;
-  zip: number;
+  zip: number | string;
 };
 
 export type Department = {
