@@ -1,0 +1,8 @@
+# The Next.js app lives in the amazon-clone/ subfolder.
+[build]
+  base = "amazon-clone"
+  command = "npm run build"
+
+[build.environment]
+  # Matches CI. Netlify's default is newer.
+  NODE_VERSION = "22"
