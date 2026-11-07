@@ -23,6 +23,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Prime from "../../../../public/prime-logo.png";
+import { PageSpinner } from "@/app/components/Shared/Spinner";
 
 export default function Page() {
   
@@ -34,6 +35,7 @@ export default function Page() {
   const [productInfo, setProductInfo] = useState<Product | null>(null);
   const [orderInfo, setOrderInfo] = useState<ExtraOrderInfo | null>(null);
   const [mainImage, setMainImage] = useState<string | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
   const params = useParams();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -116,6 +118,7 @@ export default function Page() {
         }
       } catch (error) {
         console.error("Error fetching product #" + params.id + ": ", error);
+        setLoadFailed(true);
         return;
       }
 
@@ -141,7 +144,13 @@ export default function Page() {
     <>
       {" "}
       {!productInfo ? (
-        ""
+        loadFailed ? (
+          <div className="p-10 text-center font-ember">
+            We couldn&apos;t load this product. Please try again.
+          </div>
+        ) : (
+          <PageSpinner />
+        )
       ) : (
         <div className="flex flex-col items-center max-w-[1500px] mx-auto relative min-h-screen w-full">
           {/* Product Section Container */}

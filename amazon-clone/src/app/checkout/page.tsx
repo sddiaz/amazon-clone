@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AmazonButton from "../components/Shared/AmazonButton";
 import SignInPrompt from "../components/Shared/SignInPrompt";
+import { PageSpinner, Spinner } from "../components/Shared/Spinner";
 import FirebaseService from "../services/FirebaseService";
 import { StoreService } from "../services/StoreService";
 import { OrderItem, Product, RootState } from "../types";
@@ -73,7 +74,7 @@ export default function Checkout() {
 
   //#endregion
 
-  if (!isReady) return null;
+  if (!isReady) return <PageSpinner />;
   if (!authInfo) {
     return <SignInPrompt message="Sign in to check out." />;
   }
@@ -83,6 +84,11 @@ export default function Checkout() {
       <div className="w-full max-w-[1000px] flex flex-col md:flex-row gap-4 mt-2">
         <div className="flex-1 bg-white shadow-md p-4">
           <h1 className="text-2xl font-emberThin font-bold mb-2">Checkout</h1>
+          {!lines && (
+            <div className="flex justify-center py-10">
+              <Spinner size={32} />
+            </div>
+          )}
           {lines && lines.length === 0 && (
             <div className="text-sm">
               Your cart is empty. <Link href="/" className="text-[var(--amazonLink)] hover:underline">Keep shopping</Link>
@@ -122,7 +128,8 @@ export default function Checkout() {
           <AmazonButton
             full
             type="standard"
-            text={isPlacing ? "Placing order..." : "Place your order"}
+            text={isPlacing ? "Placing order" : "Place your order"}
+            icon={isPlacing ? <Spinner size={16} tone="inherit" className="ml-2" /> : undefined}
             disabled={isPlacing || !lines?.length}
             onClick={placeOrder}
           />

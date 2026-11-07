@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import AmazonButton from "./AmazonButton";
 import { RefreshCwIcon } from "lucide-react";
+import { Spinner } from "./Spinner";
 interface ProductDisplayProps {
   type: string;
 }
@@ -16,6 +17,7 @@ export default function ProductDisplay(props: ProductDisplayProps) {
   //#region Variables
 
   const [departmentData, setDepartmentData] = useState<ProductResponse[]>();
+  const [loadFailed, setLoadFailed] = useState(false);
 
   //#endregion
 
@@ -24,6 +26,7 @@ export default function ProductDisplay(props: ProductDisplayProps) {
   // For UI appeal, we fetch 4 random images from 7 different categories and display them.
   
   const fetchProducts = async () => {
+    setLoadFailed(false);
     try {
       // Obtain data from 7 random departments
       const randomIndices = HelperFunctions.getRandomIndices(
@@ -43,7 +46,7 @@ export default function ProductDisplay(props: ProductDisplayProps) {
       }
     } catch (error) {
       console.error("Error fetching product:", error);
-      throw error;
+      setLoadFailed(true);
     }
   };
 
@@ -59,6 +62,17 @@ export default function ProductDisplay(props: ProductDisplayProps) {
 
   return (
     <div className="relative -mt-[70px] sm:-mt-[100px] md:-mt-[120px] lg:-mt-[350px]">
+      {!departmentData && !loadFailed && (
+        <div className="flex justify-center py-24">
+          <Spinner size={40} />
+        </div>
+      )}
+      {loadFailed && (
+        <div className="flex flex-col items-center gap-3 py-24 font-ember">
+          We couldn&apos;t load products right now.
+          <AmazonButton type="standard" text="Try again" onClick={() => fetchProducts()} />
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
         {departmentData?.map((department) => (
           <div

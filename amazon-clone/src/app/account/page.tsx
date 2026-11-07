@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import AmazonButton from "../components/Shared/AmazonButton";
 import SignInPrompt from "../components/Shared/SignInPrompt";
+import { PageSpinner } from "../components/Shared/Spinner";
 import FirebaseService from "../services/FirebaseService";
 import { RootState } from "../types";
 
@@ -46,7 +47,7 @@ export default function Account() {
 
   //#endregion
 
-  if (!isReady) return null;
+  if (!isReady) return <PageSpinner />;
   if (!authInfo) {
     return <SignInPrompt message="Sign in to manage your account." />;
   }

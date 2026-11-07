@@ -3,6 +3,7 @@ import Image from "next/image";
 import Prime from "../../../../public/prime-logo.png";
 import AmazonLink from "./AmazonLink";
 import Alert from "./Alert";
+import { Spinner } from "./Spinner";
 import AmazonButton from "./AmazonButton";
 import FirebaseService from "@/app/services/FirebaseService";
 import { useState } from "react";
@@ -18,6 +19,7 @@ export default function WishlistDisplay(props: WishlistDisplayProps) {
 
   const [alert, setAlert] = useState<string[]>([]);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [removingId, setRemovingId] = useState<number | null>(null);
   const firebaseUserData = useSelector((state: RootState) => state.user);
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -50,6 +52,7 @@ export default function WishlistDisplay(props: WishlistDisplayProps) {
   };
 
   const handleRemove = async (id: number) => {
+    setRemovingId(id);
     try {
       await FirebaseService.removeItemFromWishlist(
         firebaseUserData?.userData?.uid,
@@ -59,6 +62,8 @@ export default function WishlistDisplay(props: WishlistDisplayProps) {
     } catch (error) {
       console.error("Error removing product #" + id + ": ", error);
       handleAlert("error", "Could not remove that item.");
+    } finally {
+      setRemovingId(null);
     }
   };
 
@@ -151,7 +156,13 @@ export default function WishlistDisplay(props: WishlistDisplayProps) {
             <div className="mt-2">
               <AmazonButton
                 full
-                text="Remove"
+                text={removingId === product?.id ? "Removing" : "Remove"}
+                icon={
+                  removingId === product?.id ? (
+                    <Spinner size={16} tone="inherit" className="ml-2" />
+                  ) : undefined
+                }
+                disabled={removingId !== null}
                 type="outlined"
                 onClick={() => handleRemove(product?.id)}
               />

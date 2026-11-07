@@ -14,6 +14,7 @@ import { StoreService } from "../services/StoreService";
 import { Product, RootState } from "../types";
 import { useRouter } from "next/navigation";
 import WishlistDisplay from "../components/Shared/WishlistDisplay";
+import { PageSpinner } from "../components/Shared/Spinner";
 
 export default function Cart() {
   //#region Variables
@@ -25,6 +26,8 @@ export default function Cart() {
   const [wishlistData, setWishlistData] = useState<{ productData: Product }[]>(
     []
   );
+  const { authInfo, isReady } = useSelector((state: RootState) => state.auth);
+  const [isLoadingCart, setIsLoadingCart] = useState(true);
   const router = useRouter();
   const tomorrow = new Date();
 
@@ -88,12 +91,15 @@ export default function Cart() {
 
   useEffect(() => {
     if (firebaseUserData?.userData?.cart) {
-      handleFetchCartData();
-      handleFetchWishlistData();
+      Promise.all([handleFetchCartData(), handleFetchWishlistData()])
+        .catch((error) => console.error("Error loading cart:", error))
+        .finally(() => setIsLoadingCart(false));
     }
   }, [firebaseUserData]);
 
   //#endregion
+
+  if (!isReady || (authInfo && isLoadingCart)) return <PageSpinner />;
 
   return (
     <div className="font-ember flex flex-col items-center min-h-screen w-full bg-[var(--amazonGrey)] gap-y-4">

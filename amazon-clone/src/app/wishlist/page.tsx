@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SignInPrompt from "../components/Shared/SignInPrompt";
+import { PageSpinner } from "../components/Shared/Spinner";
 import WishlistDisplay from "../components/Shared/WishlistDisplay";
 import { StoreService } from "../services/StoreService";
 import { Product, RootState } from "../types";
@@ -37,7 +38,7 @@ export default function Wishlist() {
 
   //#endregion
 
-  if (!isReady) return null;
+  if (!isReady) return <PageSpinner />;
   if (!authInfo) {
     return <SignInPrompt message="Sign in to see your Wish List." />;
   }
@@ -47,6 +48,7 @@ export default function Wishlist() {
       <div className="w-full max-w-[1500px] mt-2 bg-white shadow-md p-4 h-fit">
         <h1 className="text-2xl font-emberThin font-bold mb-3">Your Wish List</h1>
         {error && <div className="text-sm text-red-600">{error}</div>}
+        {!products && !error && <PageSpinner />}
         {products && (
           <WishlistDisplay wishlistData={products} />
         )}

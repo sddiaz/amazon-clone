@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SignInPrompt from "../components/Shared/SignInPrompt";
+import { PageSpinner } from "../components/Shared/Spinner";
 import FirebaseService from "../services/FirebaseService";
 import { PlacedOrder, RootState } from "../types";
 
@@ -31,7 +32,7 @@ export default function Orders() {
 
   //#endregion
 
-  if (!isReady) return null;
+  if (!isReady) return <PageSpinner />;
   if (!authInfo) {
     return <SignInPrompt message="Sign in to see your orders." />;
   }
@@ -41,6 +42,7 @@ export default function Orders() {
       <div className="w-full max-w-[1000px] mt-2">
         <h1 className="text-2xl font-emberThin font-bold mb-3">Your Orders</h1>
         {error && <div className="text-sm text-red-600">{error}</div>}
+        {!orders && !error && <PageSpinner />}
         {orders && orders.length === 0 && (
           <div className="bg-white shadow-md p-4 text-sm">
             You haven&apos;t placed any orders yet.{" "}
