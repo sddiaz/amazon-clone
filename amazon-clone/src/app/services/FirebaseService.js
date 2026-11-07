@@ -330,4 +330,55 @@ export default class FirebaseService {
       throw this.handleError(error);
     }
   }
+
+  /* Order Methods */
+
+  /**
+   * Demo checkout: records the order and empties the cart in one batch.
+   * No payment is taken.
+   */
+  static async placeOrder({ uid, items, total }) {
+    const orderRef = firestoreDb.collection("orders").doc();
+    const batch = firestoreDb.batch();
+    batch.set(orderRef, {
+      uid,
+      products: items.map((item) => String(item.productId)),
+      items,
+      total,
+      orderDate: new Date(),
+    });
+    batch.update(firestoreDb.collection("users").doc(uid), { cart: [] });
+    await batch.commit();
+    return orderRef.id;
+  }
+
+  /** @returns {Promise<Array<{id: string, total: number, orderDate: string, items: Array<{productId: string, title: string, price: number, quantity: number, thumbnail: string}>}>>} */
+  static async getOrders(uid) {
+    const snapshot = await firestoreDb
+      .collection("orders")
+      .where("uid", "==", uid)
+      .get();
+    return snapshot.docs
+      .map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          total: data.total,
+          items: data.items,
+          orderDate: data.orderDate?.toDate?.().toISOString() ?? "",
+        };
+      })
+      .sort((a, b) => b.orderDate.localeCompare(a.orderDate));
+  }
+
+  /* Account Methods */
+
+  static async deleteAccountAndData() {
+    const user = auth.currentUser;
+    if (!user) throw new Error("No user is currently signed in");
+    // Delete auth first: it can fail (recent login required) and we must not
+    // wipe the profile in that case.
+    await deleteUser(user);
+    await firestoreDb.collection("users").doc(user.uid).delete();
+  }
 }

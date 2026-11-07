@@ -11,7 +11,12 @@ interface NavButtonProps {
 
 export default function NavButton({ children, disabled = false, link = ""}: NavButtonProps) {
   return (
-    <Link href={link} target="_blank" rel="noopener noreferrer" className={`shrink-0 ${
+    <Link
+      href={link}
+      {...(link.startsWith("/")
+        ? {}
+        : { target: "_blank", rel: "noopener noreferrer" })}
+      className={`shrink-0 ${
       disabled 
         ? 'opacity-50 pointer-events-none' 
         : 'cursor-pointer hover:scale-105'

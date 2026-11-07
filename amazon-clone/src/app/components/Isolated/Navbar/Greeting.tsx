@@ -41,7 +41,7 @@ const Greeting = () => {
     <div>
       <Popover isUserSignedIn={isUserSignedIn}>
         <Link
-          href={isUserSignedIn ? "/orders" : "/sign-in"}
+          href={isUserSignedIn ? "/account" : "/sign-in"}
           className="relative z-50"
         >
           <span className="select-none cursor-pointer w-[135px] h-[90%] flex flex-shrink-0 whitespace-nowrap flex-col p-[10px] text-[12px] hover-border text-white items-start justify-start font-emberThin">

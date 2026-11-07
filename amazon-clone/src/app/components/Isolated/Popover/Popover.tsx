@@ -63,10 +63,10 @@ export default function Popover(props: {
                   Your Account
                   <ul className="font-light">
                     <li>
-                      <AmazonLink href="" text="Account" defaultColor />
+                      <AmazonLink href="/account" text="Account" defaultColor />
                     </li>
                     <li>
-                      <AmazonLink href="" text="Orders" defaultColor />
+                      <AmazonLink href="/orders" text="Orders" defaultColor />
                     </li>
                     <li>
                       <AmazonLink

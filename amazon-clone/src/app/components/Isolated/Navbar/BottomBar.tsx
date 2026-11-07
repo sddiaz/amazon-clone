@@ -21,7 +21,7 @@ const BottomBar = () => {
         <Menu />
         All
       </NavButton>
-      <NavButton>
+      <NavButton link="/orders">
         <ShoppingBag />
         Buy Again
       </NavButton>

@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 /* Initial State */
 const initialState: AuthState = {
   authInfo: null,
+  isReady: false,
 };
 
 /* Slice */
@@ -13,9 +14,11 @@ const authSlice = createSlice({
   reducers: {
     setAuthInfo: (state, action) => {
       state.authInfo = action.payload;
+      state.isReady = true;
     },
     clearAuthInfo: (state) => {
       state.authInfo = null;
+      state.isReady = true;
     },
   },
 });

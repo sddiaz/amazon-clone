@@ -119,7 +119,7 @@ export default function Cart() {
                 full
                 text="Proceed to Checkout"
                 type="standard"
-                onClick={() => {}}
+                onClick={() => router.push("/checkout")}
               />
             </div>
           )}

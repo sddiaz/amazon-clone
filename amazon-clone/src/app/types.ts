@@ -95,7 +95,24 @@ export interface LocationState {
 
 export interface AuthState {
   authInfo: UserInfo | null;
+  // false until Firebase has reported whether anyone is signed in
+  isReady: boolean;
 }
+
+export type OrderItem = {
+  productId: string;
+  title: string;
+  price: number;
+  quantity: number;
+  thumbnail: string;
+};
+
+export type PlacedOrder = {
+  id: string;
+  total: number;
+  orderDate: string; // ISO date string
+  items: OrderItem[];
+};
 export interface UserState {
   userData: UserData | null;
 }
